@@ -39,4 +39,18 @@ An IMDB clone application developed in JavaFX for browsing movies, TV series, an
    mvn exec:java -Dexec.mainClass="com.package.StartApplication"
    ```
 
+
+### Some Screenshots
+
+![img](/images/2026-03-14_22-07.png)
+![img](/images/2026-03-14_22-12.png)
+![img](/images/2026-03-14_22-12_1.png)
+![img](/images/2026-03-14_22-13.png)
+![img](/images/2026-03-14_22-14.png)
+![img](/images/2026-03-14_22-14_1.png)
+
+
+
+
+
 *Last updated: January 2026*
