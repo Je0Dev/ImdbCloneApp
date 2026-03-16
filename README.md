@@ -31,8 +31,8 @@ An IMDB clone application developed in JavaFX for browsing movies, TV series, an
 
 1. Clone & Run:
    ```bash
-   git clone https://github.com/Je0Dev/<
-   cd imdb-clone
+   git clone https://github.com/Je0Dev/ImdbCloneApp.git
+   cd ImdbCloneApp 
    javac StartApplication.java/MovieAppGui.java
    java StartApplication.java/MovieAppGui.java
    mvn clean install
@@ -49,8 +49,8 @@ An IMDB clone application developed in JavaFX for browsing movies, TV series, an
 ![img](/images/2026-03-14_22-14.png)
 ![img](/images/2026-03-14_22-14_1.png)
 
+## Licence
+*MIT-Licence*
 
 
-
-
-*Last updated: January 2026*
+*Last updated: March 2026*
