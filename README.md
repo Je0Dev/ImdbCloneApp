@@ -49,8 +49,7 @@ An IMDB clone application developed in JavaFX for browsing movies, TV series, an
 ![img](/images/2026-03-14_22-14.png)
 ![img](/images/2026-03-14_22-14_1.png)
 
-## Licence
-*MIT-Licence*
+## MIT Licence
 
-
+---
 *Last updated: March 2026*
