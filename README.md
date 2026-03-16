@@ -4,7 +4,7 @@ An IMDB clone application developed in JavaFX for browsing movies, TV series, an
 
 ## 📚 Overview
 
-## 🎥 Content Management
+### 🎥 Content Management
 - **Movies & TV Shows**: Browse, search, and filter movies and TV series with detailed information
 - **Celebrity Profiles**: View actor and director profiles with some of their info
 - **User Authentication**: Secure registration and login system with session management
@@ -13,7 +13,7 @@ An IMDB clone application developed in JavaFX for browsing movies, TV series, an
 - **Responsive UI**: Modern JavaFX interface with FXML
 - **Data Management**: In-memory data storage with serialization support for writing into the txt files
 
-## 🛠️ Technical Stack
+### 🛠️ Technical Stack
 
 - **Backend Language**: Java 21
 - **UI Framework**: JavaFX 21.0.3
@@ -21,17 +21,17 @@ An IMDB clone application developed in JavaFX for browsing movies, TV series, an
 - **Dependency Injection**: Custom Service Locator pattern
 - **Logging**: SLF4J with Simple Binding for buttons,fields etc.
 
-## 🚀 Getting Started
+### 🚀 Getting Started
 
-### Prerequisites
+#### Prerequisites
 - Java 21 or later
 - Maven 3.8.0 or later
 
-### Installation
+#### Installation Steps
 
 1. Clone & Run:
    ```bash
-   git clone https://github.com/Je0Dev/imdb-clone.git
+   git clone https://github.com/Je0Dev/<
    cd imdb-clone
    javac StartApplication.java/MovieAppGui.java
    java StartApplication.java/MovieAppGui.java
