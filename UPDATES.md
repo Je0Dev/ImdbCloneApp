@@ -277,3 +277,907 @@ Based on code analysis, the following features appear to be planned but not impl
 
 *Last Updated: April 2026*
 *Primary Focus: Functionality, Cleanup, Documentation*
+
+---
+
+# ALTERNATIVE MIGRATION OPTIONS
+
+The following sections outline complete rewrite options for the IMDb Clone application using modern technology stacks.
+
+---
+
+## Option A: Next.js/React + Spring Boot Stack
+
+### A.1 Architecture Overview
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    FRONTEND (Next.js 14+)                  │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
+│  │   Pages     │  │ Components  │  │   Hooks     │         │
+│  │  (App Dir)  │  │  (UI Kit)   │  │  (State)    │         │
+│  └─────────────┘  └─────────────┘  └─────────────┘         │
+│         │                │                │                 │
+│         └────────────────┼────────────────┘                 │
+│                          │                                  │
+│                    ┌─────▼─────┐                             │
+│                    │  TanStack │                             │
+│                    │   Query   │                             │
+│                    └─────┬─────┘                             │
+└──────────────────────────┼──────────────────────────────────┘
+                           │ REST API
+┌──────────────────────────┼──────────────────────────────────┐
+│                    BACKEND (Spring Boot 3.x)                │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
+│  │ Controllers │  │  Services   │  │ Repositories│         │
+│  │   (REST)    │  │  (Business) │  │   (JPA)     │         │
+│  └─────────────┘  └─────────────┘  └─────────────┘         │
+│         │                │                │                 │
+│         └────────────────┼────────────────┘                 │
+│                          │                                  │
+│                    ┌─────▼─────┐                             │
+│                    │   PostgreSQL   │                       │
+│                    │   (Database)  │                       │
+│                    └──────────────┘                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### A.2 Technology Stack
+
+#### Frontend
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Next.js | 14+ | React framework with App Router |
+| React | 18+ | UI library |
+| TypeScript | 5.x | Type safety |
+| Tailwind CSS | 3.x | Styling |
+| TanStack Query | 5.x | Data fetching/caching |
+| Zustand | 4.x | Client state management |
+| React Hook Form | 7.x | Form handling |
+| Zod | 3.x | Schema validation |
+| Framer Motion | 11.x | Animations |
+| React Hot Toast | 4.x | Notifications |
+
+#### Backend
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Spring Boot | 3.2+ | Web framework |
+| Spring Security | 6.x | Authentication |
+| Spring Data JPA | 3.x | Data access |
+| PostgreSQL | 16+ | Primary database |
+| H2 | 2.x | Development DB |
+| Jackson | 2.x | JSON processing |
+| Lombok | 1.18+ | Boilerplate reduction |
+| MapStruct | 1.5+ | DTO mapping |
+
+### A.3 Project Structure
+
+```
+imdb-clone/
+├── frontend/                    # Next.js application
+│   ├── src/
+│   │   ├── app/               # App Router pages
+│   │   │   ├── (auth)/        # Auth route group
+│   │   │   │   ├── login/
+│   │   │   │   └── register/
+│   │   │   ├── (main)/        # Main app routes
+│   │   │   │   ├── dashboard/
+│   │   │   │   ├── movies/
+│   │   │   │   ├── series/
+│   │   │   │   ├── search/
+│   │   │   │   └── profile/
+│   │   │   ├── api/           # API routes (BFF)
+│   │   │   ├── layout.tsx
+│   │   │   └── page.tsx
+│   │   ├── components/
+│   │   │   ├── ui/            # Reusable UI components
+│   │   │   │   ├── Button/
+│   │   │   │   ├── Card/
+│   │   │   │   ├── Modal/
+│   │   │   │   ├── Table/
+│   │   │   │   └── Input/
+│   │   │   ├── movies/        # Movie-specific components
+│   │   │   ├── search/
+│   │   │   └── layout/
+│   │   ├── hooks/             # Custom React hooks
+│   │   │   ├── useMovies.ts
+│   │   │   ├── useAuth.ts
+│   │   │   └── useSearch.ts
+│   │   ├── lib/               # Utilities
+│   │   │   ├── api.ts         # API client
+│   │   │   ├── auth.ts        # Auth utilities
+│   │   │   └── utils.ts
+│   │   ├── stores/            # Zustand stores
+│   │   │   ├── authStore.ts
+│   │   │   └── uiStore.ts
+│   │   └── types/             # TypeScript types
+│   │       └── index.ts
+│   ├── public/
+│   ├── package.json
+│   ├── tailwind.config.ts
+│   └── tsconfig.json
+│
+├── backend/                    # Spring Boot application
+│   ├── src/main/java/com/papel/imdb/
+│   │   ├── config/            # Configuration
+│   │   │   ├── SecurityConfig.java
+│   │   │   ├── CorsConfig.java
+│   │   │   └── QueryConfig.java
+│   │   ├── controller/         # REST controllers
+│   │   │   ├── MovieController.java
+│   │   │   ├── SeriesController.java
+│   │   │   ├── AuthController.java
+│   │   │   └── SearchController.java
+│   │   ├── service/           # Business logic
+│   │   │   ├── MovieService.java
+│   │   │   ├── RatingService.java
+│   │   │   └── UserService.java
+│   │   ├── repository/         # Data access
+│   │   │   ├── MovieRepository.java
+│   │   │   ├── UserRepository.java
+│   │   │   └── custom/
+│   │   ├── model/             # Domain models
+│   │   │   ├── entity/
+│   │   │   ├── dto/
+│   │   │   └── enums/
+│   │   ├── security/           # Security
+│   │   │   ├── JwtTokenProvider.java
+│   │   │   ├── UserDetailsService.java
+│   │   │   └── JwtAuthenticationFilter.java
+│   │   └── ImdbApplication.java
+│   ├── src/main/resources/
+│   │   ├── application.yml
+│   │   └── data/               # Seed data
+│   └── pom.xml
+│
+├── docker-compose.yml          # Local development
+└── README.md
+```
+
+### A.4 Migration Steps
+
+#### Phase 1: Backend (Week 1-2)
+- [ ] Set up Spring Boot project with dependencies
+- [ ] Configure PostgreSQL and JPA
+- [ ] Create entity models from existing Java models
+- [ ] Implement repositories with Spring Data JPA
+- [ ] Create REST controllers
+- [ ] Implement JWT authentication
+- [ ] Add data seeding from existing .txt files
+
+#### Phase 2: Frontend Setup (Week 3)
+- [ ] Initialize Next.js 14 project
+- [ ] Configure Tailwind CSS
+- [ ] Set up API client with Axios
+- [ ] Implement authentication flow
+- [ ] Create layout components
+
+#### Phase 3: Core Features (Week 4-5)
+- [ ] Movie listing and details pages
+- [ ] Search functionality with filters
+- [ ] Rating system
+- [ ] User watchlist
+- [ ] Series/TV shows pages
+
+#### Phase 4: Polish (Week 6)
+- [ ] Animations and transitions
+- [ ] Loading states and error handling
+- [ ] Responsive design
+- [ ] Performance optimization
+- [ ] Deploy to Vercel + Railway
+
+### A.5 Key Features to Implement
+
+#### Authentication
+- [ ] JWT-based authentication
+- [ ] Login/Register pages
+- [ ] Password hashing with BCrypt
+- [ ] Session management
+- [ ] Role-based access (USER, ADMIN)
+
+#### Movie Management
+- [ ] CRUD operations
+- [ ] Poster image upload/download
+- [ ] Cast and crew management
+- [ ] Genre filtering
+- [ ] Pagination
+
+#### Search & Discovery
+- [ ] Full-text search
+- [ ] Advanced filters (year, rating, genre)
+- [ ] Sorting options
+- [ ] Auto-complete suggestions
+
+#### User Features
+- [ ] Watchlist
+- [ ] Rating history
+- [ ] Favorite actors/directors
+- [ ] Profile customization
+
+### A.6 API Endpoints Design
+
+```
+Authentication:
+POST   /api/auth/register     - Register new user
+POST   /api/auth/login        - Login user
+POST   /api/auth/refresh      - Refresh token
+GET    /api/auth/me           - Get current user
+
+Movies:
+GET    /api/movies            - List movies (paginated)
+GET    /api/movies/{id}       - Get movie details
+POST   /api/movies            - Create movie (admin)
+PUT    /api/movies/{id}       - Update movie (admin)
+DELETE /api/movies/{id}       - Delete movie (admin)
+POST   /api/movies/{id}/rate  - Rate movie
+
+Search:
+GET    /api/search             - Search all content
+GET    /api/search/movies      - Search movies
+GET    /api/search/actors      - Search actors
+
+User:
+GET    /api/users/me           - Get profile
+PUT    /api/users/me           - Update profile
+GET    /api/users/me/watchlist - Get watchlist
+POST   /api/users/me/watchlist - Add to watchlist
+DELETE /api/users/me/watchlist/{id} - Remove from watchlist
+GET    /api/users/me/ratings  - Get user ratings
+```
+
+### A.7 Database Schema
+
+```sql
+-- Users
+CREATE TABLE users (
+    id BIGSERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(20) DEFAULT 'USER',
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Movies
+CREATE TABLE movies (
+    id BIGSERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    release_date DATE,
+    duration INT,  -- minutes
+    rating DECIMAL(3,1),  -- 0-10
+    poster_url VARCHAR(500),
+    backdrop_url VARCHAR(500),
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Movie Genres (many-to-many)
+CREATE TABLE movie_genres (
+    movie_id BIGINT REFERENCES movies(id) ON DELETE CASCADE,
+    genre_id BIGINT REFERENCES genres(id),
+    PRIMARY KEY (movie_id, genre_id)
+);
+
+-- Actors
+CREATE TABLE actors (
+    id BIGSERIAL PRIMARY KEY,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    birth_date DATE,
+    biography TEXT,
+    photo_url VARCHAR(500)
+);
+
+-- Movie Cast (many-to-many with role)
+CREATE TABLE movie_cast (
+    movie_id BIGINT REFERENCES movies(id) ON DELETE CASCADE,
+    actor_id BIGINT REFERENCES actors(id),
+    role VARCHAR(255),
+    display_order INT,
+    PRIMARY KEY (movie_id, actor_id)
+);
+
+-- Directors
+CREATE TABLE directors (
+    id BIGSERIAL PRIMARY KEY,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    birth_date DATE,
+    biography TEXT
+);
+
+-- Movie Directors (many-to-many)
+CREATE TABLE movie_directors (
+    movie_id BIGINT REFERENCES movies(id) ON DELETE CASCADE,
+    director_id BIGINT REFERENCES directors(id),
+    PRIMARY KEY (movie_id, director_id)
+);
+
+-- User Ratings
+CREATE TABLE ratings (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
+    movie_id BIGINT REFERENCES movies(id) ON DELETE CASCADE,
+    rating INT NOT NULL,  -- 1-10
+    review TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(user_id, movie_id)
+);
+
+-- Watchlist
+CREATE TABLE watchlist (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
+    movie_id BIGINT REFERENCES movies(id) ON DELETE CASCADE,
+    added_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(user_id, movie_id)
+);
+
+-- Series (TV Shows)
+CREATE TABLE series (
+    id BIGSERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    start_date DATE,
+    end_date DATE,
+    rating DECIMAL(3,1),
+    poster_url VARCHAR(500),
+    status VARCHAR(20)  -- CONTINUING, ENDED
+);
+
+-- Seasons
+CREATE TABLE seasons (
+    id BIGSERIAL PRIMARY KEY,
+    series_id BIGINT REFERENCES series(id) ON DELETE CASCADE,
+    season_number INT NOT NULL,
+    release_date DATE,
+    episode_count INT
+);
+
+-- Episodes
+CREATE TABLE episodes (
+    id BIGSERIAL PRIMARY KEY,
+    season_id BIGINT REFERENCES seasons(id) ON DELETE CASCADE,
+    episode_number INT NOT NULL,
+    title VARCHAR(255),
+    description TEXT,
+    release_date DATE,
+    duration INT,
+    rating DECIMAL(3,1)
+);
+```
+
+---
+
+## Option B: Complete Rust Rewrite
+
+### B.1 Architecture Overview
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     RUST APPLICATION                        │
+│                                                             │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │                  Web Layer (Axum)                    │   │
+│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐          │   │
+│  │  │ Routes   │  │  Middleware │  │Errors   │          │   │
+│  │  └──────────┘  └──────────┘  └──────────┘          │   │
+│  └──────────────────────┬──────────────────────────────┘   │
+│                          │                                    │
+│  ┌──────────────────────▼──────────────────────────────┐   │
+│  │              Service Layer (Business Logic)           │   │
+│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐          │   │
+│  │  │ MovieSvc │  │ AuthSvc  │  │SearchSvc │          │   │
+│  │  └──────────┘  └──────────┘  └──────────┘          │   │
+│  └──────────────────────┬──────────────────────────────┘   │
+│                          │                                    │
+│  ┌──────────────────────▼──────────────────────────────┐   │
+│  │              Repository Layer (Data)                │   │
+│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐          │   │
+│  │  │  Movies  │  │  Users   │  │ Cache    │          │   │
+│  │  └──────────┘  └──────────┘  └──────────┘          │   │
+│  └──────────────────────┬──────────────────────────────┘   │
+│                          │                                    │
+│  ┌──────────────────────▼──────────────────────────────┐   │
+│  │                    Database                           │   │
+│  │              (SQLite / PostgreSQL)                    │   │
+│  └──────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│                  FRONTEND (Alternative)                     │
+│                     (Web + Desktop)                          │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │                  Tauri + React/                       │   │
+│  │                  Leptos/Yew (WASM)                   │   │
+│  └──────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### B.2 Technology Stack
+
+#### Core Backend
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Rust | 1.75+ | Systems programming language |
+| Axum | 0.7+ | Web framework |
+| Tokio | 1.x | Async runtime |
+| Serde | 1.x | Serialization |
+| SQLx | 0.7+ | Database (with compile-time checks) |
+| PostgreSQL | 16+ | Production database |
+| SQLite | 3.x | Development database |
+| Redis | 7.x | Caching (optional) |
+| JWT | 0.11+ | Authentication |
+| BCrypt | 0.4+ | Password hashing |
+
+#### Frontend (Tauri)
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Tauri | 2.x | Desktop app wrapper |
+| React | 18+ | UI components |
+| TypeScript | 5.x | Type safety |
+| CSS | 3.x | Styling |
+
+#### Alternative: Leptos (WASM)
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Leptos | 0.6+ | WASM-first framework |
+| Sycamore | 0.9+ | Reactive WASM framework |
+| Yew | 0.21+ | WASM components |
+
+### B.3 Project Structure
+
+```
+imdb-rust/
+├── Cargo.toml
+├── rust-toolchain.toml
+├── .env.example
+├── docker-compose.yml
+│
+├── src/
+│   ├── main.rs                 # Application entry
+│   ├── lib.rs                  # Library root
+│   │
+│   ├── web/                    # Web layer
+│   │   ├── mod.rs
+│   │   ├── router.rs           # Route definitions
+│   │   ├── routes/
+│   │   │   ├── mod.rs
+│   │   │   ├── movies.rs
+│   │   │   ├── series.rs
+│   │   │   ├── auth.rs
+│   │   │   ├── search.rs
+│   │   │   └── users.rs
+│   │   ├── middleware/
+│   │   │   ├── mod.rs
+│   │   │   ├── auth.rs
+│   │   │   └── logging.rs
+│   │   └── error.rs           # Error handling
+│   │
+│   ├── service/               # Business logic
+│   │   ├── mod.rs
+│   │   ├── movie_service.rs
+│   │   ├── rating_service.rs
+│   │   ├── auth_service.rs
+│   │   ├── search_service.rs
+│   │   └── user_service.rs
+│   │
+│   ├── repository/             # Data access
+│   │   ├── mod.rs
+│   │   ├── movie_repo.rs
+│   │   ├── user_repo.rs
+│   │   └── cache_repo.rs
+│   │
+│   ├── model/                  # Domain models
+│   │   ├── mod.rs
+│   │   ├── entity/
+│   │   │   ├── mod.rs
+│   │   │   ├── movie.rs
+│   │   │   ├── user.rs
+│   │   │   ├── rating.rs
+│   │   │   └── series.rs
+│   │   ├── dto/
+│   │   │   ├── mod.rs
+│   │   │   ├── request/
+│   │   │   │   └── mod.rs
+│   │   │   └── response/
+│   │   │       ├── mod.rs
+│   │   │       └── movie_resp.rs
+│   │   └── enums/
+│   │       ├── mod.rs
+│   │       └── genre.rs
+│   │
+│   ├── security/              # Security
+│   │   ├── mod.rs
+│   │   ├── jwt.rs
+│   │   ├── password.rs
+│   │   └── claims.rs
+│   │
+│   ├── config/                # Configuration
+│   │   ├── mod.rs
+│   │   ├── app.rs
+│   │   └── database.rs
+│   │
+│   └── utils/                 # Utilities
+│       ├── mod.rs
+│       └── logging.rs
+│
+├── migrations/                # Database migrations (SQLx)
+│   ├── 001_create_users.sql
+│   ├── 002_create_movies.sql
+│   └── ...
+│
+├── tests/                     # Integration tests
+│   ├── mod.rs
+│   ├── movies_test.rs
+│   └── auth_test.rs
+│
+└── docs/                      # Documentation
+    └── API.md
+```
+
+### B.4 Key Crates & Dependencies
+
+```toml
+[package]
+name = "imdb-rust"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Web Framework
+axum = "0.7"
+tokio = { version = "1", features = ["full"] }
+tower = "0.4"
+tower-http = { version = "0.5", features = ["cors", "trace"] }
+
+# Database
+sqlx = { version = "0.7", features = ["runtime-tokio", "postgres", "sqlite", "chrono", "uuid"] }
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Authentication
+jsonwebtoken = "0.11"
+bcrypt = "0.4"
+
+# Validation
+validator = { version = "0.18", features = ["derive"] }
+
+# Async
+futures = "0.3"
+
+# Error Handling
+thiserror = "1"
+anyhow = "1"
+
+# Date/Time
+chrono = { version = "0.4", features = ["serde"] }
+
+# UUID
+uuid = { version = "1", features = ["v4", "serde"] }
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = "0.3"
+tracing-appender = "0.2"
+
+[dev-dependencies]
+tower = { version = "0.4", features = ["util"] }
+http-body = "0.4"
+axum-test = "0.6"
+```
+
+### B.5 Migration Steps
+
+#### Phase 1: Project Setup (Week 1)
+- [ ] Initialize Rust project with Cargo
+- [ ] Set up logging and error handling
+- [ ] Configure database with SQLx
+- [ ] Create migrations
+- [ ] Set up Axum router
+- [ ] Implement basic CRUD for movies
+
+#### Phase 2: Core Backend (Week 2-3)
+- [ ] Implement user authentication (JWT)
+- [ ] Create all repository structs
+- [ ] Implement service layer
+- [ ] Add search functionality
+- [ ] Implement rating system
+- [ ] Add series/TV show support
+
+#### Phase 3: Data Migration (Week 4)
+- [ ] Write parser for existing .txt data files
+- [ ] Create migration script
+- [ ] Import existing movie data
+- [ ] Import user data (passwords need rehashing)
+- [ ] Verify data integrity
+
+#### Phase 4: Desktop Client (Week 5-6)
+- [ ] Set up Tauri project
+- [ ] Implement React frontend
+- [ ] Connect to Rust backend
+- [ ] Build native desktop app
+
+#### Phase 5: Polish (Week 7)
+- [ ] Add tests
+- [ ] Performance optimization
+- [ ] Error handling improvements
+- [ ] Documentation
+
+### B.6 Comparison: JavaFX vs Rust
+
+| Aspect | JavaFX (Current) | Rust (Rewrite) |
+|--------|------------------|----------------|
+| Performance | Good | Excellent |
+| Memory | Higher (~200MB) | Lower (~30MB) |
+| Binary Size | Large (~50MB+) | Small (~10MB) |
+| Startup Time | Slow (~3s) | Fast (<1s) |
+| Cross-Platform | Yes | Yes |
+| Developer Experience | Good | Steep learning curve |
+| Safety | JVM memory managed | Memory safe by design |
+| Concurrency | Thread-based | Async/await |
+| Build Time | Moderate | Slower |
+| Ecosystem | Mature | Growing |
+
+### B.7 Database Schema (SQLx)
+
+```sql
+-- Users table
+CREATE TABLE users (
+    id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(20) DEFAULT 'user',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Movies table
+CREATE TABLE movies (
+    id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    release_date DATE,
+    duration INTEGER,
+    rating DECIMAL(3,1),
+    poster_url VARCHAR(500),
+    backdrop_url VARCHAR(500),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Genres enum
+CREATE TYPE genre AS ENUM (
+    'ACTION', 'ADVENTURE', 'ANIMATION', 'BIOGRAPHY', 'COMEDY',
+    'CRIME', 'DOCUMENTARY', 'DRAMA', 'FAMILY', 'FANTASY',
+    'HISTORY', 'HORROR', 'MUSIC', 'MYSTERY', 'ROMANCE',
+    'SCIENCE_FICTION', 'SPORT', 'THRILLER', 'WAR', 'WESTERN'
+);
+
+-- Movie genres junction
+CREATE TABLE movie_genres (
+    movie_id BIGINT REFERENCES movies(id) ON DELETE CASCADE,
+    genre GENRE NOT NULL,
+    PRIMARY KEY (movie_id, genre)
+);
+
+-- Actors
+CREATE TABLE actors (
+    id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    birth_date DATE,
+    biography TEXT,
+    photo_url VARCHAR(500)
+);
+
+-- Movie cast with roles
+CREATE TABLE movie_cast (
+    movie_id BIGINT REFERENCES movies(id) ON DELETE CASCADE,
+    actor_id BIGINT REFERENCES actors(id) ON DELETE CASCADE,
+    role VARCHAR(255),
+    display_order INTEGER DEFAULT 0,
+    PRIMARY KEY (movie_id, actor_id)
+);
+
+-- Directors
+CREATE TABLE directors (
+    id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    birth_date DATE,
+    biography TEXT
+);
+
+-- Movie directors
+CREATE TABLE movie_directors (
+    movie_id BIGINT REFERENCES movies(id) ON DELETE CASCADE,
+    director_id BIGINT REFERENCES directors(id) ON DELETE CASCADE,
+    PRIMARY KEY (movie_id, director_id)
+);
+
+-- User ratings
+CREATE TABLE ratings (
+    id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
+    movie_id BIGINT REFERENCES movies(id) ON DELETE CASCADE,
+    rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 10),
+    review TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(user_id, movie_id)
+);
+
+-- Watchlist
+CREATE TABLE watchlist (
+    id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
+    movie_id BIGINT REFERENCES movies(id) ON DELETE CASCADE,
+    added_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(user_id, movie_id)
+);
+
+-- Series
+CREATE TABLE series (
+    id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    start_date DATE,
+    end_date DATE,
+    rating DECIMAL(3,1),
+    poster_url VARCHAR(500),
+    status VARCHAR(20) DEFAULT 'continuing'
+);
+
+-- Seasons
+CREATE TABLE seasons (
+    id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    series_id BIGINT REFERENCES series(id) ON DELETE CASCADE,
+    season_number INTEGER NOT NULL,
+    release_date DATE,
+    episode_count INTEGER
+);
+
+-- Episodes
+CREATE TABLE episodes (
+    id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    season_id BIGINT REFERENCES seasons(id) ON DELETE CASCADE,
+    episode_number INTEGER NOT NULL,
+    title VARCHAR(255),
+    description TEXT,
+    release_date DATE,
+    duration INTEGER,
+    rating DECIMAL(3,1)
+);
+
+-- Indexes
+CREATE INDEX idx_movies_title ON movies(title);
+CREATE INDEX idx_movies_rating ON movies(rating DESC);
+CREATE INDEX idx_movies_release ON movies(release_date DESC);
+CREATE INDEX idx_ratings_user ON ratings(user_id);
+CREATE INDEX idx_ratings_movie ON ratings(movie_id);
+```
+
+### B.8 API Endpoints (Axum)
+
+```rust
+use axum::{
+    routing::{get, post, put, delete},
+    Router, extract::Path,
+};
+
+// Auth routes
+router.route("/api/auth/register", post(register))
+       .route("/api/auth/login", post(login))
+       .route("/api/auth/refresh", post(refresh_token))
+       .route("/api/auth/me", get(get_current_user));
+
+// Movie routes
+router.route("/api/movies", get(list_movies))
+       .route("/api/movies", post(create_movie))
+       .route("/api/movies/:id", get(get_movie))
+       .route("/api/movies/:id", put(update_movie))
+       .route("/api/movies/:id", delete(delete_movie))
+       .route("/api/movies/:id/rate", post(rate_movie));
+
+// Search routes
+router.route("/api/search", get(search))
+       .route("/api/search/movies", get(search_movies))
+       .route("/api/search/actors", get(search_actors));
+
+// Series routes
+router.route("/api/series", get(list_series))
+       .route("/api/series/:id", get(get_series));
+
+// User routes
+router.route("/api/users/me", get(get_profile))
+       .route("/api/users/me", put(update_profile))
+       .route("/api/users/me/watchlist", get(get_watchlist))
+       .route("/api/users/me/watchlist", post(add_to_watchlist))
+       .route("/api/users/me/watchlist/:movie_id", delete(remove_from_watchlist))
+       .route("/api/users/me/ratings", get(get_ratings));
+```
+
+### B.9 Error Handling Pattern
+
+```rust
+use thiserror::Error;
+
+#[derive(Error, Debug)]
+pub enum ApiError {
+    #[error("User not found")]
+    UserNotFound,
+    
+    #[error("Movie not found")]
+    MovieNotFound,
+    
+    #[error("Invalid credentials")]
+    InvalidCredentials,
+    
+    #[error("Token expired")]
+    TokenExpired,
+    
+    #[error("Database error: {0}")]
+    DatabaseError(#[from] sqlx::Error),
+    
+    #[error("Validation error: {0}")]
+    ValidationError(String),
+    
+    #[error("Unauthorized")]
+    Unauthorized,
+    
+    #[error("Forbidden")]
+    Forbidden,
+}
+
+impl IntoResponse for ApiError {
+    fn into_response(self) -> Response {
+        let (status, message) = match self {
+            ApiError::UserNotFound => (StatusCode::NOT_FOUND, self.to_string()),
+            ApiError::MovieNotFound => (StatusCode::NOT_FOUND, self.to_string()),
+            ApiError::InvalidCredentials => (StatusCode::UNAUTHORIZED, self.to_string()),
+            ApiError::TokenExpired => (StatusCode::UNAUTHORIZED, self.to_string()),
+            ApiError::Unauthorized => (StatusCode::UNAUTHORIZED, self.to_string()),
+            ApiError::Forbidden => (StatusCode::FORBIDDEN, self.to_string()),
+            ApiError::DatabaseError(_) => (StatusCode::INTERNAL_SERVER_ERROR, "Database error"),
+            ApiError::ValidationError(msg) => (StatusCode::BAD_REQUEST, msg),
+        };
+        
+        Json(json!({ "error": message })).into_response(status)
+    }
+}
+```
+
+---
+
+## Decision Matrix
+
+| Factor | Keep JavaFX | Next.js + Spring Boot | Rust |
+|--------|-------------|----------------------|------|
+| Development Time | - | 6 weeks | 7 weeks |
+| Performance | Good | Good | Excellent |
+| Memory Usage | ~200MB | ~100MB | ~30MB |
+| Maintainability | Medium | High | Medium |
+| Learning Curve | Low | Medium | High |
+| Desktop Support | Native | Web only | Native |
+| Mobile Support | No | Responsive | Tauri mobile |
+| Team Expertise | Java | JS + Java | Rust |
+| Future Proofing | Medium | High | High |
+
+### Recommendation
+
+**Option 1 (Next.js + Spring Boot)**: Best for web-based application with modern stack, easier hiring, mature ecosystem.
+
+**Option 2 (Rust)**: Best for high-performance desktop application, learning modern systems programming, standalone executable.
+
+**Keep JavaFX**: Only if desktop-only with no web requirement, and team has strong Java skills.
+
+---
+
+*Last Updated: April 2026*
+*Additional Options Added: Next.js/React + Spring Boot, Rust Rewrite*
+
