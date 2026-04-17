@@ -29,27 +29,32 @@ An IMDB clone application developed in JavaFX for browsing movies, TV series, an
 
 #### Installation Steps
 
-1. Clone & Run:
+1. Clone the repository:
    ```bash
    git clone https://github.com/Je0Dev/ImdbCloneApp.git
-   cd ImdbCloneApp 
-   javac StartApplication.java/MovieAppGui.java
-   java StartApplication.java/MovieAppGui.java
-   mvn clean install
-   mvn exec:java -Dexec.mainClass="com.package.StartApplication"
+   cd ImdbCloneApp
    ```
 
+2. Build and run:
+   ```bash
+   mvn clean compile
+   mvn exec:java
+   ```
 
-### Some Screenshots
+## 🏗️ Architecture
 
-![img](/images/2026-03-14_22-07.png)
-![img](/images/2026-03-14_22-12.png)
-![img](/images/2026-03-14_22-12_1.png)
-![img](/images/2026-03-14_22-13.png)
-![img](/images/2026-03-14_22-14.png)
-![img](/images/2026-03-14_22-14_1.png)
+The project follows MVC architecture with service locator pattern:
+- **Controllers**: JavaFX controllers handling UI logic
+- **Models**: Domain objects (Movie, Series, Actor, etc.)
+- **Services**: Business logic layer
+- **Repository**: Data access layer
+- **Helpers**: Extracted reusable logic from large controllers
+
+### Refactoring
+
+This project is being refactored to reduce file sizes and extract reusable helper classes. See `AGENTS.md` for details.
 
 ## MIT Licence
 
 ---
-*Last updated: March 2026*
+*Last updated: April 2026*

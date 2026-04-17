@@ -64,6 +64,9 @@ public class SeriesController extends BaseController {
      * ID of the currently logged-in user
      */
     private int currentUserId;
+    
+    private final SeriesDialogHelper dialogHelper = new SeriesDialogHelper();
+    private final SeriesLogicHelper logicHelper = new SeriesLogicHelper();
 
     @FXML private TableColumn<Series, Integer> seriesStartYearColumn;
     @FXML private TableColumn<Series, String> seriesEndYearColumn;
@@ -82,29 +85,13 @@ public class SeriesController extends BaseController {
     private final ObjectProperty<Series> selectedSeries = new SimpleObjectProperty<>();
     private Season selectedSeason;
 
-    /**
-     * Updates the seasons table with the current series' seasons
-     */
-    private void updateSeasonsTable() {
-        if (selectedSeries.get() != null) {
-            seasonsTable.setItems(FXCollections.observableArrayList(selectedSeries.get().getSeasons()));
-        } else {
-            seasonsTable.getItems().clear();
-            episodesTable.getItems().clear();
-        }
+private void updateSeasonsTable() {
+        logicHelper.updateSeasonsTable(seasonsTable, selectedSeries.get());
     }
 
-    /**
-     * Initializes the seasons table columns
-     */
     private void initializeSeasonsTable() {
-        seasonNumberColumn.setCellValueFactory(new PropertyValueFactory<>("seasonNumber"));
-        seasonTitleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
-        episodeCountColumn.setCellValueFactory(cellData -> 
-            new SimpleIntegerProperty(cellData.getValue().getEpisodes() != null ? 
-                cellData.getValue().getEpisodes().size() : 0).asObject());
+        logicHelper.initializeSeasonsTable(seasonNumberColumn, seasonTitleColumn, episodeCountColumn);
 
-        // Add listener for season selection
         seasonsTable.getSelectionModel().selectedItemProperty().addListener(
             (obs, oldSelection, newSelection) -> {
                 selectedSeason = newSelection;
@@ -117,54 +104,11 @@ public class SeriesController extends BaseController {
      * Initializes the episodes table columns
      */
     private void initializeEpisodesTable() {
-        episodeNumberColumn.setCellValueFactory(new PropertyValueFactory<>("episodeNumber"));
-        episodeTitleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
-        episodeDurationColumn.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(formatDuration(cellData.getValue().getDuration())));
+        logicHelper.initializeEpisodesTable(episodeNumberColumn, episodeTitleColumn, episodeDurationColumn);
     }
 
-    /**
-     * Formats duration in minutes to a readable string (e.g., "1h 30 min" or "45 min")
-     */
-    private String formatDuration(int minutes) {
-        if (minutes <= 0) return "N/A";
-        if (minutes < 60) {
-            return minutes + " min";
-        } else {
-            int hours = minutes / 60;
-            int mins = minutes % 60;
-            if (mins == 0) {
-                return hours + "h";
-            } else {
-                return hours + "h " + mins + "m";
-            }
-        }
-    }
-
-    /**
-     * Updates the episodes table based on the selected season
-     */
     private void updateEpisodesTable() {
-        if (selectedSeason != null) {
-            // Create a new observable list to ensure the table updates
-            ObservableList<Episode> episodes = FXCollections.observableArrayList(selectedSeason.getEpisodes());
-            episodesTable.setItems(episodes);
-            
-            // Force table refresh
-            episodesTable.refresh();
-            
-            // Log for debugging
-            logger.debug("Updated episodes table with {} episodes", episodes.size());
-            episodes.forEach(ep -> 
-                logger.debug("Episode {}: {} ({} min)", 
-                    ep.getEpisodeNumber(), 
-                    ep.getTitle(), 
-                    ep.getDuration())
-            );
-        } else {
-            episodesTable.getItems().clear();
-            logger.debug("Cleared episodes table - no season selected");
-        }
+        logicHelper.updateEpisodesTable(episodesTable, selectedSeason);
     }
 
 

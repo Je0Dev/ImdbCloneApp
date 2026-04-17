@@ -44,6 +44,8 @@ public class MoviesController extends BaseController {
     private MoviesService moviesService;
 
     private Movie selected;
+    private final MoviesDialogHelper dialogHelper = new MoviesDialogHelper();
+    private final MoviesLogicHelper logicHelper = new MoviesLogicHelper();
 
     public MoviesController() {
         super();

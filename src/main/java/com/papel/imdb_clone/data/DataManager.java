@@ -152,9 +152,12 @@ public class DataManager {
     public List<Movie> getAllMovies() {
         return moviesService.getAll();
     }
+
+    @Deprecated
     public List<Movie> getMovies() {
-        return moviesService.getAll();
+        return getAllMovies();
     }
+
     public List<Series> getAllSeries() {
         return seriesService.getAll();
     }

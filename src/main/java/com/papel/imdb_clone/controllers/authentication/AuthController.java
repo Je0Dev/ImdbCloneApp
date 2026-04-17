@@ -52,6 +52,7 @@ public class AuthController extends BaseController implements Initializable {
     private final transient NavigationService navigationService; //navigation service for navigation
     private transient String sessionToken; //session token for authentication
     private final transient Map<String, Serializable> data; //data to be passed to the next controller
+    private final com.papel.imdb_clone.service.validation.AuthValidationHelper validationHelper = new com.papel.imdb_clone.service.validation.AuthValidationHelper();
     private Stage stage;
 
 
