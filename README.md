@@ -1,8 +1,8 @@
-# IMDB Clone App
+# IMDB Clone Desktop App
 
-A JavaFX desktop application that clones core IMDb functionality: browsing movies, TV series, and celebrities with search, ratings, and user authentication.
+A JavaFX desktop application that clones some of the most core IMDb functionality such as: browsing movies, TV series, and celebrities with search, ratings, and user authentication.
 
-> **University Project** — Built for a university lesson. This is an older project but remains fairly well-organized and functional. Open to contributions, improvements, and refactoring.
+> **University Project** — Built for a university lesson. This is an older project but remains fairly well-organized and functional (for the most part). Open to *imporvements and refactoring* if someone wants to go the extra mile to help me.
 
 ---
 
@@ -65,7 +65,7 @@ The compiler is configured with `-Xlint:all` for full warnings and deprecation c
 ## Project Structure
 
 ```
-IMDB_CLONEAPP/
+ImdbCloneApp/
 ├── data/                        # Runtime serialized user data (user_data.ser)
 ├── docs/                        # Detailed architecture documentation (12 markdown files)
 ├── images/                      # Application screenshots
@@ -304,17 +304,24 @@ Helper classes (`*DialogHelper`, `*LogicHelper`) have been extracted from the la
 
 ## License
 
-This project is free to use for **non-commercial, educational, and personal purposes**. You may fork, modify, and share it for non-profit use. Commercial use requires permission.
+This project is free to use for **non-commercial, educational, and personal purposes**. You may fork, modify, and share it for non-profit use. Commercial use requires permission. Mostly follows the *MIT* Licence
+
+Copyright © 2026 Je0Dev
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ## Contributing
 
-Contributions, improvements, and refactoring are welcome! Areas that need attention:
-- Further splitting of large controller files
-- Unit test coverage (especially service and helper layers)
-- New features: watchlist, dark mode, database persistence
-- Code quality: fix warnings, add `serialVersionUID`, remove dead code
+ Areas that need attention (but will propably wont get that much imporvements):
+- Further splitting of large files and removing dead code snippets
+- Implementing tests for all major functioanlity to make everything be more maintanable and scalable in the future.
+- Creating new meaningful features such as watchlists, sharing capabilities to improve engagement and a lot more to add them here.
 
-See the [`docs/`](docs/) directory for comprehensive architecture documentation before contributing. Every source directory also contains a `README.md` with its specific contents and purpose.
+> See the [`docs/`](docs/) directory for comprehensive architecture documentation before contributing. Every source directory also contains a `README.md` with its specific contents and purpose.
 
 ---
 
